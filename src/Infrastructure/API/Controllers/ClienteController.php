@@ -2,6 +2,8 @@
 
 namespace App\Infrastructure\API\Controllers;
 
+use App\Application\DTOs\CriarClienteDTO;
+use App\Application\DTOs\AtualizarClienteDTO;
 use App\Application\UseCases\CriarClienteUseCase;
 use App\Application\UseCases\ListarClientesUseCase;
 use App\Application\UseCases\ObterClienteUseCase;
@@ -35,58 +37,62 @@ class ClienteController
     public function criar(Request $request, Response $response): Response
     {
         $data = $request->getParsedBody();
-        $cliente = $this->criarClienteUseCase->execute(
+        $dto = new CriarClienteDTO(
             $data['nome'] ?? null,
             $data['cpf'] ?? null,
             $data['email'] ?? null
         );
 
-        $response->getBody()->write(json_encode($cliente->toArray()));
+        $clienteDTO = $this->criarClienteUseCase->execute($dto);
+
+        $response->getBody()->write(json_encode($clienteDTO->toArray()));
         return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
     }
 
     public function listar(Request $request, Response $response): Response
     {
-        $clientes = $this->listarClientesUseCase->execute();
-        $response->getBody()->write(json_encode(array_map(fn($cliente) => $cliente->toArray(), $clientes)));
+        $clientesDTO = $this->listarClientesUseCase->execute();
+        $response->getBody()->write(json_encode(array_map(fn($dto) => $dto->toArray(), $clientesDTO)));
         return $response->withHeader('Content-Type', 'application/json');
     }
 
     public function obter(Request $request, Response $response, array $args): Response
     {
-        $id = (int) $args['id'];
-        $cliente = $this->obterClienteUseCase->execute($id);
+        $id = $request->getAttribute('id');
+        $clienteDTO = $this->obterClienteUseCase->execute($id);
 
-        if (!$cliente) {
+        if (!$clienteDTO) {
             return $response->withStatus(404);
         }
 
-        $response->getBody()->write(json_encode($cliente->toArray()));
+        $response->getBody()->write(json_encode($clienteDTO->toArray()));
         return $response->withHeader('Content-Type', 'application/json');
     }
 
     public function atualizar(Request $request, Response $response, array $args): Response
     {
-        $id = (int) $args['id'];
+        $id = $request->getAttribute('id');
         $data = $request->getParsedBody();
-        $cliente = $this->atualizarClienteUseCase->execute(
+        $dto = new AtualizarClienteDTO(
             $id,
             $data['nome'] ?? null,
             $data['cpf'] ?? null,
             $data['email'] ?? null
         );
 
-        if (!$cliente) {
+        $clienteDTO = $this->atualizarClienteUseCase->execute($dto);
+
+        if (!$clienteDTO) {
             return $response->withStatus(404);
         }
 
-        $response->getBody()->write(json_encode($cliente->toArray()));
+        $response->getBody()->write(json_encode($clienteDTO->toArray()));
         return $response->withHeader('Content-Type', 'application/json');
     }
 
     public function excluir(Request $request, Response $response, array $args): Response
     {
-        $id = (int) $args['id'];
+        $id = $request->getAttribute('id');
         $sucesso = $this->excluirClienteUseCase->execute($id);
 
         if (!$sucesso) {

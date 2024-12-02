@@ -2,7 +2,7 @@
 
 namespace App\Application\UseCases;
 
-use App\Domain\Entities\Cliente;
+use App\Application\DTOs\ClienteDTO;
 use App\Domain\Repositories\ClienteRepositoryInterface;
 
 class ObterClienteUseCase
@@ -14,8 +14,9 @@ class ObterClienteUseCase
         $this->clienteRepository = $clienteRepository;
     }
 
-    public function execute(int $id): ?Cliente
+    public function execute(int $id): ?ClienteDTO
     {
-        return $this->clienteRepository->findById($id);
+        $cliente = $this->clienteRepository->findById($id);
+        return $cliente ? ClienteDTO::fromEntity($cliente) : null;
     }
 }

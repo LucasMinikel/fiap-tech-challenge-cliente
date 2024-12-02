@@ -2,7 +2,8 @@
 
 namespace App\Application\UseCases;
 
-use App\Domain\Entities\Cliente;
+use App\Application\DTOs\ClienteDTO;
+use App\Application\DTOs\AtualizarClienteDTO;
 use App\Domain\Repositories\ClienteRepositoryInterface;
 
 class AtualizarClienteUseCase
@@ -14,21 +15,22 @@ class AtualizarClienteUseCase
         $this->clienteRepository = $clienteRepository;
     }
 
-    public function execute(int $id, ?string $nome, ?string $cpf, ?string $email): ?Cliente
+    public function execute(AtualizarClienteDTO $dto): ?ClienteDTO
     {
-        $cliente = $this->clienteRepository->findById($id);
+        $cliente = $this->clienteRepository->findById($dto->id);
         if (!$cliente) {
             return null;
         }
 
-        $cliente->setNome($nome);
-        $cliente->setCpf($cpf);
-        $cliente->setEmail($email);
+        $cliente->setNome($dto->nome);
+        $cliente->setCpf($dto->cpf);
+        $cliente->setEmail($dto->email);
 
-        if ($this->clienteRepository->update($cliente)) {
-            return $cliente;
+        $atualizado = $this->clienteRepository->update($cliente);
+        if (!$atualizado) {
+            return null;
         }
 
-        return null;
+        return ClienteDTO::fromEntity($cliente);
     }
 }

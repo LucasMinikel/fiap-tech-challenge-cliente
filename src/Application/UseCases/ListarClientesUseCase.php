@@ -2,6 +2,7 @@
 
 namespace App\Application\UseCases;
 
+use App\Application\DTOs\ClienteDTO;
 use App\Domain\Repositories\ClienteRepositoryInterface;
 
 class ListarClientesUseCase
@@ -15,6 +16,7 @@ class ListarClientesUseCase
 
     public function execute(): array
     {
-        return $this->clienteRepository->findAll();
+        $clientes = $this->clienteRepository->findAll();
+        return array_map(fn($cliente) => ClienteDTO::fromEntity($cliente), $clientes);
     }
 }

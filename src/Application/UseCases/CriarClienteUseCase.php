@@ -2,6 +2,8 @@
 
 namespace App\Application\UseCases;
 
+use App\Application\DTOs\ClienteDTO;
+use App\Application\DTOs\CriarClienteDTO;
 use App\Domain\Entities\Cliente;
 use App\Domain\Repositories\ClienteRepositoryInterface;
 
@@ -14,9 +16,10 @@ class CriarClienteUseCase
         $this->clienteRepository = $clienteRepository;
     }
 
-    public function execute(?string $nome, ?string $cpf, ?string $email): Cliente
+    public function execute(CriarClienteDTO $dto): ClienteDTO
     {
-        $cliente = new Cliente($nome, $cpf, $email);
-        return $this->clienteRepository->save($cliente);
+        $cliente = new Cliente($dto->nome, $dto->cpf, $dto->email);
+        $clienteSalvo = $this->clienteRepository->save($cliente);
+        return ClienteDTO::fromEntity($clienteSalvo);
     }
 }
