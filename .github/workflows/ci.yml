@@ -41,7 +41,7 @@ jobs:
       with:
         args: >
           -Dsonar.projectKey=LucasMinikel_fiap-tech-challenge-cliente
-          -Dsonar.organization=LucasMinikel
+          -Dsonar.organization=lucasminikel
           -Dsonar.sources=src
           -Dsonar.tests=tests
           -Dsonar.php.coverage.reportPaths=coverage.xml
