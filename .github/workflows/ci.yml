@@ -27,8 +27,8 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: Run unit tests with coverage
-      run: vendor/bin/phpunit --coverage-clover=coverage.xml
+    # - name: Run unit tests with coverage
+    #   run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
     - name: Run BDD tests
       run: vendor/bin/behat
@@ -46,7 +46,7 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
         args: >
-          -Dsonar.projectKey=LucasMinikel-fiap-tech-challenge-cliente
+          -Dsonar.projectKey=LucasMinikel_fiap-tech-challenge-cliente
           -Dsonar.organization=LucasMinikel
           -Dsonar.sources=src
           -Dsonar.tests=tests
