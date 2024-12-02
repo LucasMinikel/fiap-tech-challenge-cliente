@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 0  # Necessário para o SonarCloud ver todo o histórico
+        fetch-depth: 0
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -44,3 +44,16 @@ jobs:
           -Dsonar.sources=src
           -Dsonar.tests=tests
           -Dsonar.php.tests.reportPath=test-report.xml
+
+    - name: Check code coverage
+      run: |
+        if [ ! -f coverage.xml ]; then
+          echo "coverage.xml file not found!"
+          exit 1
+        fi
+        COVERAGE=$(grep -Po '(?<=<coverage generated=".*" line-rate=").*?(?=")' coverage.xml)
+        COVERAGE_PERCENTAGE=$(echo "$COVERAGE * 100" | bc)
+        if (( $(echo "$COVERAGE_PERCENTAGE < 80" | bc -l) )); then
+          echo "Code coverage is below 80%"
+          exit 1
+        fi
