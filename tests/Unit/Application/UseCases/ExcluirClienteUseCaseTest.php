@@ -13,11 +13,11 @@ class ExcluirClienteUseCaseTest extends TestCase
         $repositoryMock = $this->createMock(ClienteRepositoryInterface::class);
         $repositoryMock->expects($this->once())
             ->method('delete')
-            ->with(1)
+            ->with('CLIE123')
             ->willReturn(true);
 
         $useCase = new ExcluirClienteUseCase($repositoryMock);
-        $result = $useCase->execute(1);
+        $result = $useCase->execute('CLIE123');
 
         $this->assertTrue($result);
     }
@@ -27,11 +27,11 @@ class ExcluirClienteUseCaseTest extends TestCase
         $repositoryMock = $this->createMock(ClienteRepositoryInterface::class);
         $repositoryMock->expects($this->once())
             ->method('delete')
-            ->with(1)
+            ->with('CLIE123')
             ->willReturn(false);
 
         $useCase = new ExcluirClienteUseCase($repositoryMock);
-        $result = $useCase->execute(1);
+        $result = $useCase->execute('CLIE123');
 
         $this->assertFalse($result);
     }

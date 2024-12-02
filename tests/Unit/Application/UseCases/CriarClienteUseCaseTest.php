@@ -14,7 +14,7 @@ class CriarClienteUseCaseTest extends TestCase
     public function testExecute()
     {
         $clienteMock = $this->createMock(Cliente::class);
-        $clienteMock->method('getId')->willReturn(1);
+        $clienteMock->method('getId')->willReturn('CLIE1234567890');
         $clienteMock->method('getNome')->willReturn('João Silva');
         $clienteMock->method('getCpf')->willReturn('123.456.789-00');
         $clienteMock->method('getEmail')->willReturn('joao@example.com');
@@ -29,7 +29,7 @@ class CriarClienteUseCaseTest extends TestCase
         $result = $useCase->execute($dto);
 
         $this->assertInstanceOf(ClienteDTO::class, $result);
-        $this->assertEquals(1, $result->id);
+        $this->assertStringStartsWith('CLIE', $result->id);
         $this->assertEquals('João Silva', $result->nome);
         $this->assertEquals('123.456.789-00', $result->cpf);
         $this->assertEquals('joao@example.com', $result->email);

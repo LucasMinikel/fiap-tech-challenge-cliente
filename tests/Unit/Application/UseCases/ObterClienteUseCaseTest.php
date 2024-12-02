@@ -13,19 +13,19 @@ class ObterClienteUseCaseTest extends TestCase
     public function testExecuteComClienteExistente()
     {
         $cliente = new Cliente('João Silva', '123.456.789-00', 'joao@example.com');
-        $cliente->setId(1);
+        $cliente->setId('CLIE123');
 
         $repositoryMock = $this->createMock(ClienteRepositoryInterface::class);
         $repositoryMock->expects($this->once())
             ->method('findById')
-            ->with(1)
+            ->with('CLIE123')
             ->willReturn($cliente);
 
         $useCase = new ObterClienteUseCase($repositoryMock);
-        $result = $useCase->execute(1);
+        $result = $useCase->execute('CLIE123');
 
         $this->assertInstanceOf(ClienteDTO::class, $result);
-        $this->assertEquals(1, $result->id);
+        $this->assertEquals('CLIE123', $result->id);
         $this->assertEquals('João Silva', $result->nome);
     }
 
@@ -34,11 +34,11 @@ class ObterClienteUseCaseTest extends TestCase
         $repositoryMock = $this->createMock(ClienteRepositoryInterface::class);
         $repositoryMock->expects($this->once())
             ->method('findById')
-            ->with(1)
+            ->with('CLIE123')
             ->willReturn(null);
 
         $useCase = new ObterClienteUseCase($repositoryMock);
-        $result = $useCase->execute(1);
+        $result = $useCase->execute('CLIE123');
 
         $this->assertNull($result);
     }

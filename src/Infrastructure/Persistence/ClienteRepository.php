@@ -27,7 +27,7 @@ class ClienteRepository implements ClienteRepositoryInterface
         return $clientes;
     }
 
-    public function findById(int $id): ?Cliente
+    public function findById(string $id): ?Cliente
     {
         $stmt = $this->pdo->prepare('SELECT * FROM clientes WHERE id = :id');
         $stmt->execute(['id' => $id]);
@@ -44,14 +44,14 @@ class ClienteRepository implements ClienteRepositoryInterface
 
     public function save(Cliente $cliente): Cliente
     {
-        $stmt = $this->pdo->prepare('INSERT INTO clientes (nome, cpf, email) VALUES (:nome, :cpf, :email)');
+        $stmt = $this->pdo->prepare('INSERT INTO clientes (id, nome, cpf, email) VALUES (:id, :nome, :cpf, :email)');
         $stmt->execute([
+            'id' => $cliente->getId(),
             'nome' => $cliente->getNome(),
             'cpf' => $cliente->getCpf(),
             'email' => $cliente->getEmail()
         ]);
 
-        $cliente->setId($this->pdo->lastInsertId());
         return $cliente;
     }
 
@@ -66,7 +66,7 @@ class ClienteRepository implements ClienteRepositoryInterface
         ]);
     }
 
-    public function delete(int $id): bool
+    public function delete(string $id): bool
     {
         $stmt = $this->pdo->prepare('DELETE FROM clientes WHERE id = :id');
         return $stmt->execute(['id' => $id]);

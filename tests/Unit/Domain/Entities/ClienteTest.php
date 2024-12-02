@@ -41,10 +41,10 @@ class ClienteTest extends TestCase
     public function testToArray()
     {
         $cliente = new Cliente('João Silva', '123.456.789-00', 'joao@example.com');
-        $cliente->setId(1);
+        $cliente->setId('CLIE123');
 
         $expected = [
-            'id' => 1,
+            'id' => 'CLIE123',
             'nome' => 'João Silva',
             'cpf' => '123.456.789-00',
             'email' => 'joao@example.com',

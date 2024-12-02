@@ -14,23 +14,23 @@ class AtualizarClienteUseCaseTest extends TestCase
     public function testExecuteComClienteExistente()
     {
         $cliente = new Cliente('João Silva', '123.456.789-00', 'joao@example.com');
-        $cliente->setId(1);
+        $cliente->setId('CLIE123');
 
         $repositoryMock = $this->createMock(ClienteRepositoryInterface::class);
         $repositoryMock->expects($this->once())
             ->method('findById')
-            ->with(1)
+            ->with('CLIE123')
             ->willReturn($cliente);
         $repositoryMock->expects($this->once())
             ->method('update')
             ->willReturn(true);
 
         $useCase = new AtualizarClienteUseCase($repositoryMock);
-        $dto = new AtualizarClienteDTO(1, 'João Silva Atualizado', '123.456.789-00', 'joao.novo@example.com');
+        $dto = new AtualizarClienteDTO('CLIE123', 'João Silva Atualizado', '123.456.789-00', 'joao.novo@example.com');
         $result = $useCase->execute($dto);
 
         $this->assertInstanceOf(ClienteDTO::class, $result);
-        $this->assertEquals(1, $result->id);
+        $this->assertEquals('CLIE123', $result->id);
         $this->assertEquals('João Silva Atualizado', $result->nome);
         $this->assertEquals('joao.novo@example.com', $result->email);
     }
@@ -40,11 +40,11 @@ class AtualizarClienteUseCaseTest extends TestCase
         $repositoryMock = $this->createMock(ClienteRepositoryInterface::class);
         $repositoryMock->expects($this->once())
             ->method('findById')
-            ->with(1)
+            ->with('CLIE123')
             ->willReturn(null);
 
         $useCase = new AtualizarClienteUseCase($repositoryMock);
-        $dto = new AtualizarClienteDTO(1, 'João Silva Atualizado', '123.456.789-00', 'joao.novo@example.com');
+        $dto = new AtualizarClienteDTO('CLIE123', 'João Silva Atualizado', '123.456.789-00', 'joao.novo@example.com');
         $result = $useCase->execute($dto);
 
         $this->assertNull($result);
@@ -53,19 +53,19 @@ class AtualizarClienteUseCaseTest extends TestCase
     public function testExecuteComFalhaAoAtualizar()
     {
         $cliente = new Cliente('João Silva', '123.456.789-00', 'joao@example.com');
-        $cliente->setId(1);
+        $cliente->setId('CLIE123');
 
         $repositoryMock = $this->createMock(ClienteRepositoryInterface::class);
         $repositoryMock->expects($this->once())
             ->method('findById')
-            ->with(1)
+            ->with('CLIE123')
             ->willReturn($cliente);
         $repositoryMock->expects($this->once())
             ->method('update')
             ->willReturn(false);
 
         $useCase = new AtualizarClienteUseCase($repositoryMock);
-        $dto = new AtualizarClienteDTO(1, 'João Silva Atualizado', '123.456.789-00', 'joao.novo@example.com');
+        $dto = new AtualizarClienteDTO('CLIE123', 'João Silva Atualizado', '123.456.789-00', 'joao.novo@example.com');
         $result = $useCase->execute($dto);
 
         $this->assertNull($result);

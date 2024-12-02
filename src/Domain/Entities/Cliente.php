@@ -4,24 +4,25 @@ namespace App\Domain\Entities;
 
 class Cliente
 {
-    private ?int $id;
+    private string $id;
     private ?string $nome;
     private ?string $cpf;
     private ?string $email;
 
     public function __construct(?string $nome = null, ?string $cpf = null, ?string $email = null)
     {
+        $this->id = 'CLIE' . uniqid();
         $this->nome = $nome;
         $this->cpf = $cpf;
         $this->email = $email;
     }
 
-    public function getId(): ?int
+    public function getId(): string
     {
         return $this->id;
     }
 
-    public function setId(?int $id): void
+    public function setId(string $id): void
     {
         $this->id = $id;
     }

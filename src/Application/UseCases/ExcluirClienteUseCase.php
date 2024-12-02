@@ -13,7 +13,7 @@ class ExcluirClienteUseCase
         $this->clienteRepository = $clienteRepository;
     }
 
-    public function execute(int $id): bool
+    public function execute(string $id): bool
     {
         return $this->clienteRepository->delete($id);
     }

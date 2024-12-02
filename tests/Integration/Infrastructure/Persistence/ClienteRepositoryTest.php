@@ -16,7 +16,7 @@ class ClienteRepositoryTest extends TestCase
     {
         $this->pdo = new PDO('sqlite::memory:');
         $this->pdo->exec('CREATE TABLE clientes (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id TEXT PRIMARY KEY,
             nome TEXT,
             cpf TEXT,
             email TEXT

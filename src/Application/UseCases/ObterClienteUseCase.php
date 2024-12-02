@@ -14,7 +14,7 @@ class ObterClienteUseCase
         $this->clienteRepository = $clienteRepository;
     }
 
-    public function execute(int $id): ?ClienteDTO
+    public function execute(string $id): ?ClienteDTO
     {
         $cliente = $this->clienteRepository->findById($id);
         return $cliente ? ClienteDTO::fromEntity($cliente) : null;

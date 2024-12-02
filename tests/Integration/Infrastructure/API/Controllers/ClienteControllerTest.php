@@ -42,7 +42,7 @@ class ClienteControllerTest extends TestCase
 
     public function testCriar()
     {
-        $clienteDTO = new ClienteDTO(1, 'João Silva', '123.456.789-00', 'joao@example.com');
+        $clienteDTO = new ClienteDTO('CLIE123', 'João Silva', '123.456.789-00', 'joao@example.com');
 
         $this->criarClienteUseCase->expects($this->once())
             ->method('execute')
@@ -62,7 +62,7 @@ class ClienteControllerTest extends TestCase
         $this->assertEquals('application/json', $response->getHeaderLine('Content-Type'));
 
         $body = json_decode((string) $response->getBody(), true);
-        $this->assertEquals(1, $body['id']);
+        $this->assertEquals('CLIE123', $body['id']);
         $this->assertEquals('João Silva', $body['nome']);
         $this->assertEquals('123.456.789-00', $body['cpf']);
         $this->assertEquals('joao@example.com', $body['email']);
@@ -71,7 +71,7 @@ class ClienteControllerTest extends TestCase
     public function testListar()
     {
         $clientesDTO = [
-            new ClienteDTO(1, 'João Silva', '123.456.789-00', 'joao@example.com'),
+            new ClienteDTO('CLIE123', 'João Silva', '123.456.789-00', 'joao@example.com'),
             new ClienteDTO(2, 'Maria Santos', '987.654.321-00', 'maria@example.com')
         ];
 
@@ -94,47 +94,47 @@ class ClienteControllerTest extends TestCase
 
     public function testObter()
     {
-        $clienteDTO = new ClienteDTO(1, 'João Silva', '123.456.789-00', 'joao@example.com');
+        $clienteDTO = new ClienteDTO('CLIE123', 'João Silva', '123.456.789-00', 'joao@example.com');
 
         $this->obterClienteUseCase->expects($this->once())
             ->method('execute')
-            ->with(1)
+            ->with('CLIE123')
             ->willReturn($clienteDTO);
 
-        $request = (new ServerRequestFactory())->createServerRequest('GET', '/clientes/1');
-        $response = $this->controller->obter($request, (new ResponseFactory())->createResponse(), ['id' => '1']);
+        $request = (new ServerRequestFactory())->createServerRequest('GET', '/clientes/')->withAttribute('id', 'CLIE123');
+        $response = $this->controller->obter($request, (new ResponseFactory())->createResponse(), ['id' => 'CLIE123']);
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('application/json', $response->getHeaderLine('Content-Type'));
 
         $body = json_decode((string) $response->getBody(), true);
-        $this->assertEquals(1, $body['id']);
+        $this->assertEquals('CLIE123', $body['id']);
         $this->assertEquals('João Silva', $body['nome']);
     }
 
     public function testAtualizar()
     {
-        $clienteDTO = new ClienteDTO(1, 'João Silva Atualizado', '123.456.789-00', 'joao.novo@example.com');
+        $clienteDTO = new ClienteDTO('CLIE123', 'João Silva Atualizado', '123.456.789-00', 'joao.novo@example.com');
 
         $this->atualizarClienteUseCase->expects($this->once())
             ->method('execute')
             ->willReturn($clienteDTO);
 
-        $request = (new ServerRequestFactory())->createServerRequest('PUT', '/clientes/1')
+        $request = (new ServerRequestFactory())->createServerRequest('PUT', '/clientes/')->withAttribute('id', 'CLIE123')
             ->withParsedBody([
                 'nome' => 'João Silva Atualizado',
                 'email' => 'joao.novo@example.com'
             ]);
 
-        $response = $this->controller->atualizar($request, (new ResponseFactory())->createResponse(), ['id' => '1']);
+        $response = $this->controller->atualizar($request, (new ResponseFactory())->createResponse(), ['id' => 'CLIE123']);
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('application/json', $response->getHeaderLine('Content-Type'));
 
         $body = json_decode((string) $response->getBody(), true);
-        $this->assertEquals(1, $body['id']);
+        $this->assertEquals('CLIE123', $body['id']);
         $this->assertEquals('João Silva Atualizado', $body['nome']);
         $this->assertEquals('joao.novo@example.com', $body['email']);
     }
@@ -143,11 +143,11 @@ class ClienteControllerTest extends TestCase
     {
         $this->excluirClienteUseCase->expects($this->once())
             ->method('execute')
-            ->with(1)
+            ->with('CLIE123')
             ->willReturn(true);
 
-        $request = (new ServerRequestFactory())->createServerRequest('DELETE', '/clientes/1');
-        $response = $this->controller->excluir($request, (new ResponseFactory())->createResponse(), ['id' => '1']);
+        $request = (new ServerRequestFactory())->createServerRequest('DELETE', '/clientes/')->withAttribute('id', 'CLIE123');
+        $response = $this->controller->excluir($request, (new ResponseFactory())->createResponse(), ['id' => 'CLIE123']);
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(204, $response->getStatusCode());
