@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
     - uses: actions/checkout@v2
       with:
@@ -32,12 +32,6 @@ jobs:
 
     - name: Run BDD tests
       run: vendor/bin/behat
-
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.xml
-        fail_ci_if_error: true
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
