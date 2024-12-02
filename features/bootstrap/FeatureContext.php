@@ -5,7 +5,6 @@ use Behat\Gherkin\Node\TableNode;
 use App\Application\UseCases\CriarClienteUseCase;
 use App\Application\DTOs\CriarClienteDTO;
 use App\Domain\Entities\Cliente;
-use App\Domain\Repositories\ClienteRepositoryInterface;
 
 class FeatureContext implements Context
 {
@@ -95,34 +94,5 @@ class FeatureContext implements Context
         if ($this->resultado instanceof Cliente) {
             throw new \Exception("Um cliente foi criado, mas não deveria ter sido");
         }
-    }
-}
-
-class MockClienteRepository implements ClienteRepositoryInterface
-{
-    public function save(Cliente $cliente): Cliente
-    {
-        // Simula o salvamento retornando o próprio cliente
-        return $cliente;
-    }
-
-    public function findAll(): array
-    {
-        return [];
-    }
-
-    public function findById(string $id): ?Cliente
-    {
-        return null;
-    }
-
-    public function update(Cliente $cliente): bool
-    {
-        return true;
-    }
-
-    public function delete(string $id): bool
-    {
-        return true;
     }
 }
