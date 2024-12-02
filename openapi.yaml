@@ -1,0 +1,145 @@
+openapi: 3.0.0
+info:
+  title: API de Gestão de Clientes
+  description: API para gerenciar clientes do sistema
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/
+
+paths:
+  /clientes:
+    get:
+      summary: Lista todos os clientes
+      responses:
+        '200':
+          description: Lista de clientes retornada com sucesso
+          content:
+            application/json:    
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cliente'
+    post:
+      summary: Cria um novo cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CriarClienteDTO'
+      responses:
+        '201':
+          description: Cliente criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '400':
+          description: Dados inválidos fornecidos
+
+  /clientes/{clienteId}:
+    get:
+      summary: Obtém um cliente específico
+      parameters:
+        - in: path
+          name: clienteId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cliente encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '404':
+          description: Cliente não encontrado
+
+    put:
+      summary: Atualiza um cliente existente
+      parameters:
+        - in: path
+          name: clienteId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AtualizarClienteDTO'
+      responses:
+        '200':
+          description: Cliente atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '404':
+          description: Cliente não encontrado
+        '400':
+          description: Dados inválidos fornecidos
+
+    delete:
+      summary: Remove um cliente
+      parameters:
+        - in: path
+          name: clienteId
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Cliente removido com sucesso
+        '404':
+          description: Cliente não encontrado
+
+components:
+  schemas:
+    Cliente:
+      type: object
+      properties:
+        id:
+          type: string
+          example: CLIE1234567890
+        nome:
+          type: string
+          example: João Silva
+        cpf:
+          type: string
+          example: "123.456.789-00"
+        email:
+          type: string
+          format: email
+          example: joao@example.com
+
+    CriarClienteDTO:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: João Silva
+        cpf:
+          type: string
+          example: "123.456.789-00"
+        email:
+          type: string
+          format: email
+          example: joao@example.com
+
+    AtualizarClienteDTO:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: João Silva Atualizado
+        cpf:
+          type: string
+          example: "123.456.789-00"
+        email:
+          type: string
+          format: email
+          example: joao.novo@example.com

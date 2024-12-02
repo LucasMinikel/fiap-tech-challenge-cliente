@@ -90,7 +90,7 @@ class ClienteController
         return $response->withHeader('Content-Type', 'application/json');
     }
 
-    public function excluir(Request $request, Response $response): Response
+    public function deletar(Request $request, Response $response): Response
     {
         $id = $request->getAttribute('id');
         $sucesso = $this->excluirClienteUseCase->execute($id);

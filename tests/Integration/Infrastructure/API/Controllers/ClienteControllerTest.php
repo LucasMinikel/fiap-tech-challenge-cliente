@@ -147,7 +147,7 @@ class ClienteControllerTest extends TestCase
             ->willReturn(true);
 
         $request = (new ServerRequestFactory())->createServerRequest('DELETE', '/clientes/')->withAttribute('id', 'CLIE123');
-        $response = $this->controller->excluir($request, (new ResponseFactory())->createResponse(), ['id' => 'CLIE123']);
+        $response = $this->controller->deletar($request, (new ResponseFactory())->createResponse(), ['id' => 'CLIE123']);
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(204, $response->getStatusCode());
