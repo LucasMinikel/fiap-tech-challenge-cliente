@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Infrastructure\Persistence;
+
 use App\Domain\Entities\Cliente;
 use App\Domain\Repositories\ClienteRepositoryInterface;
 

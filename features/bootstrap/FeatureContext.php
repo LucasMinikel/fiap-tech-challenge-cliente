@@ -5,6 +5,7 @@ use Behat\Gherkin\Node\TableNode;
 use App\Application\UseCases\CriarClienteUseCase;
 use App\Application\DTOs\CriarClienteDTO;
 use App\Domain\Entities\Cliente;
+use App\Infrastructure\Persistence\MockClienteRepository;
 
 class FeatureContext implements Context
 {
