@@ -56,7 +56,7 @@ class ClienteController
         return $response->withHeader('Content-Type', 'application/json');
     }
 
-    public function obter(Request $request, Response $response, array $args): Response
+    public function obter(Request $request, Response $response): Response
     {
         $id = $request->getAttribute('id');
         $clienteDTO = $this->obterClienteUseCase->execute($id);
@@ -69,7 +69,7 @@ class ClienteController
         return $response->withHeader('Content-Type', 'application/json');
     }
 
-    public function atualizar(Request $request, Response $response, array $args): Response
+    public function atualizar(Request $request, Response $response): Response
     {
         $id = $request->getAttribute('id');
         $data = $request->getParsedBody();
@@ -90,7 +90,7 @@ class ClienteController
         return $response->withHeader('Content-Type', 'application/json');
     }
 
-    public function excluir(Request $request, Response $response, array $args): Response
+    public function excluir(Request $request, Response $response): Response
     {
         $id = $request->getAttribute('id');
         $sucesso = $this->excluirClienteUseCase->execute($id);
