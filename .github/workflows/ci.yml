@@ -27,21 +27,11 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: Debug - PHP modules
-      run: php -m
-
     - name: Run unit tests with coverage
       run: vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml
 
     - name: Run BDD tests
       run: vendor/bin/behat
-
-    - name: Debug - List files
-      run: ls -la
-
-    - name: Debug - Display coverage.xml content
-      run: cat coverage.xml
-      if: always()
 
     - name: Check code coverage
       run: |
@@ -50,7 +40,7 @@ jobs:
           exit 1
         fi
         
-        COVERAGE=$(grep -oP '(?<=<coverage generated=".*" line-rate=")[^"]*' coverage.xml)
+        COVERAGE=$(grep -oP '<coverage[^>]+line-rate="\K[^"]+' coverage.xml)
         if [ -z "$COVERAGE" ]; then
           echo "Failed to extract coverage rate from coverage.xml"
           exit 1
