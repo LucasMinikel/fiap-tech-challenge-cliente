@@ -2,14 +2,14 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v2
       with:
@@ -20,7 +20,7 @@ jobs:
       with:
         php-version: '8.2'
         coverage: xdebug
-        
+
     - name: Validate composer.json and composer.lock
       run: composer validate
 
@@ -36,6 +36,9 @@ jobs:
     - name: List directory contents
       run: ls -la
 
+    - name: Install bc
+      run: sudo apt-get install -y bc
+
     - name: Check code coverage
       run: |
         echo "Checking for coverage.xml file..."
@@ -46,10 +49,10 @@ jobs:
         fi
         
         echo "coverage.xml file found. Extracting coverage rate..."
-        COVERAGE=$(grep -oP '<coverage[^>]+line-rate="\K[^"]+' coverage.xml)
+        COVERAGE=$(grep -oP '<coverage[^>]+line-rate="\K[^"]+' coverage.xml || echo "NA")
         echo "Extracted coverage: $COVERAGE"
         
-        if [ -z "$COVERAGE" ]; then
+        if [ "$COVERAGE" = "NA" ]; then
           echo "Failed to extract coverage rate from coverage.xml"
           echo "First few lines of coverage.xml:"
           head -n 10 coverage.xml
