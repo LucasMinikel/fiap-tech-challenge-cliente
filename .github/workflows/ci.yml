@@ -19,6 +19,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.2'
+        coverage: xdebug
         
     - name: Validate composer.json and composer.lock
       run: composer validate
@@ -26,11 +27,26 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: Run unit tests
+    - name: Run unit tests with coverage
       run: vendor/bin/phpunit --configuration phpunit.xml
 
     - name: Run BDD tests
       run: vendor/bin/behat
+
+    - name: Check code coverage
+      run: |
+        if [ ! -f coverage.xml ]; then
+          echo "coverage.xml file not found!"
+          exit 1
+        fi
+        COVERAGE=$(sed -n 's/.*line-rate="$$[0-9.]*$$".*/\1/p' coverage.xml)
+        COVERAGE_PERCENTAGE=$(echo "$COVERAGE * 100" | bc)
+        if (( $(echo "$COVERAGE_PERCENTAGE < 80" | bc -l) )); then
+          echo "Code coverage is below 80%: $COVERAGE_PERCENTAGE%"
+          exit 1
+        else
+          echo "Code coverage is $COVERAGE_PERCENTAGE%"
+        fi
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
@@ -44,16 +60,4 @@ jobs:
           -Dsonar.sources=src
           -Dsonar.tests=tests
           -Dsonar.php.tests.reportPath=test-report.xml
-
-    - name: Check code coverage
-      run: |
-        if [ ! -f coverage.xml ]; then
-          echo "coverage.xml file not found!"
-          exit 1
-        fi
-        COVERAGE=$(grep -Po '(?<=<coverage generated=".*" line-rate=").*?(?=")' coverage.xml)
-        COVERAGE_PERCENTAGE=$(echo "$COVERAGE * 100" | bc)
-        if (( $(echo "$COVERAGE_PERCENTAGE < 80" | bc -l) )); then
-          echo "Code coverage is below 80%"
-          exit 1
-        fi
+          -Dsonar.php.coverage.reportPaths=coverage.xml
