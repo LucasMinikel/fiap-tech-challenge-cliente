@@ -27,11 +27,21 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
+    - name: Debug - PHP modules
+      run: php -m
+
     - name: Run unit tests with coverage
-      run: vendor/bin/phpunit --configuration phpunit.xml
+      run: vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml
 
     - name: Run BDD tests
       run: vendor/bin/behat
+
+    - name: Debug - List files
+      run: ls -la
+
+    - name: Debug - Display coverage.xml content
+      run: cat coverage.xml
+      if: always()
 
     - name: Check code coverage
       run: |
@@ -39,7 +49,13 @@ jobs:
           echo "coverage.xml file not found!"
           exit 1
         fi
-        COVERAGE=$(sed -n 's/.*line-rate="$$[0-9.]*$$".*/\1/p' coverage.xml)
+        
+        COVERAGE=$(grep -oP '(?<=<coverage generated=".*" line-rate=")[^"]*' coverage.xml)
+        if [ -z "$COVERAGE" ]; then
+          echo "Failed to extract coverage rate from coverage.xml"
+          exit 1
+        fi
+        
         COVERAGE_PERCENTAGE=$(echo "$COVERAGE * 100" | bc)
         if (( $(echo "$COVERAGE_PERCENTAGE < 80" | bc -l) )); then
           echo "Code coverage is below 80%: $COVERAGE_PERCENTAGE%"
