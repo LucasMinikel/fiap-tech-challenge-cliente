@@ -21,7 +21,6 @@ class ClienteRepositoryTest extends TestCase
             cpf TEXT,
             email TEXT
         )');
-
         $this->repository = new ClienteRepository($this->pdo);
     }
 
