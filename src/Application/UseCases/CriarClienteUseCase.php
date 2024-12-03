@@ -18,6 +18,10 @@ class CriarClienteUseCase
 
     public function execute(CriarClienteDTO $dto): ClienteDTO
     {
+        if (empty($dto->nome) || empty($dto->cpf) || empty($dto->email)) {
+            throw new \InvalidArgumentException("Todos os campos são obrigatórios");
+        }
+
         $cliente = new Cliente($dto->nome, $dto->cpf, $dto->email);
         $clienteSalvo = $this->clienteRepository->save($cliente);
         return ClienteDTO::fromEntity($clienteSalvo);
