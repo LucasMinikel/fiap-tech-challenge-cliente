@@ -49,10 +49,12 @@ jobs:
         fi
         
         echo "coverage.xml file found. Extracting coverage rate..."
-        COVERAGE=$(grep -oP '<coverage[^>]+line-rate="\K[^"]+' coverage.xml || echo "NA")
+        grep -A 3 "<coverage" coverage.xml
+
+        COVERAGE=$(grep -oP 'line-rate="\K[0-9.]+' coverage.xml | head -n 1)
         echo "Extracted coverage: $COVERAGE"
         
-        if [ "$COVERAGE" = "NA" ]; then
+        if [ -z "$COVERAGE" ]; then
           echo "Failed to extract coverage rate from coverage.xml"
           echo "First few lines of coverage.xml:"
           head -n 10 coverage.xml
